@@ -1,38 +1,26 @@
-/*
- * UUIDGen.java
+/**
+ * Copyright 2016 Neeve Research, LLC
  *
- * Created on 09.08.2003.
+ * This product includes software developed at Neeve Research, LLC
+ * (http://www.neeveresearch.com/) as well as software licenced to
+ * Neeve Research, LLC under one or more contributor license agreements.
+ * See the NOTICE file distributed with this work for additional information
+ * regarding copyright ownership.
  *
- * eaio: UUID - an implementation of the UUID specification
- * Copyright (c) 2003-2013 Johann Burkard (jb@eaio.com) http://eaio.com.
+ * Neeve Research licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following conditions:
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
- * NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
- * USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.eaio.uuid;
 
-import static com.eaio.util.Resource.close;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
@@ -82,96 +70,7 @@ public final class UUIDGen {
 
     static {
 
-        try {
-            Class.forName("java.net.InterfaceAddress");
-            macAddress = Class.forName(
-                    "com.eaio.uuid.UUIDGen$HardwareAddressLookup").newInstance().toString();
-        }
-        catch (ExceptionInInitializerError err) {
-            // Ignored.
-        }
-        catch (ClassNotFoundException ex) {
-            // Ignored.
-        }
-        catch (LinkageError err) {
-            // Ignored.
-        }
-        catch (IllegalAccessException ex) {
-            // Ignored.
-        }
-        catch (InstantiationException ex) {
-            // Ignored.
-        }
-        catch (SecurityException ex) {
-            // Ignored.
-        }
-
-        if (macAddress == null) {
-
-            Process p = null;
-            BufferedReader in = null;
-
-            try {
-                String osname = System.getProperty("os.name", ""), osver = System.getProperty("os.version", "");
-
-                if (osname.startsWith("Windows")) {
-                    p = Runtime.getRuntime().exec(
-                            new String[] { "ipconfig", "/all" }, null);
-                }
-
-                // Solaris code must appear before the generic code
-                else if (osname.startsWith("Solaris")
-                        || osname.startsWith("SunOS")) {
-                    if (osver.startsWith("5.11")) {
-                        p = Runtime.getRuntime().exec(
-                        new String[] { "dladm", "show-phys", "-m" }, null);
-                    }
-                    else {
-                        String hostName = getFirstLineOfCommand("uname", "-n");
-                        if (hostName != null) {
-                            p = Runtime.getRuntime().exec(
-                                    new String[] { "/usr/sbin/arp", hostName },
-                                    null);
-                        }
-                    }
-                }
-                else if (new File("/usr/sbin/lanscan").exists()) {
-                    p = Runtime.getRuntime().exec(
-                            new String[] { "/usr/sbin/lanscan" }, null);
-                }
-                else if (new File("/sbin/ifconfig").exists()) {
-                    p = Runtime.getRuntime().exec(
-                            new String[] { "/sbin/ifconfig", "-a" }, null);
-                }
-
-                if (p != null) {
-                    in = new BufferedReader(new InputStreamReader(
-                            p.getInputStream()), 128);
-                    String l = null;
-                    while ((l = in.readLine()) != null) {
-                        macAddress = MACAddressParser.parse(l);
-                        if (macAddress != null
-                                && Hex.parseShort(macAddress) != 0xff) {
-                            break;
-                        }
-                    }
-                }
-
-            }
-            catch (SecurityException ex) {
-                // Ignore it.
-            }
-            catch (IOException ex) {
-                // Ignore it.
-            }
-            finally {
-                if (p != null) {
-                    close(in, p.getErrorStream(), p.getOutputStream());
-                    p.destroy();
-                }
-            }
-
-        }
+        macAddress = new HardwareAddressLookup().toString();
 
         if (macAddress != null) {
             clockSeqAndNode |= Hex.parseLong(macAddress);
@@ -185,13 +84,13 @@ public final class UUIDGen {
                 clockSeqAndNode |= local[3] & 0xFF;
             }
             catch (UnknownHostException ex) {
-                clockSeqAndNode |= (long) (Math.random() * 0x7FFFFFFF);
+                clockSeqAndNode |= (long)(Math.random() * 0x7FFFFFFF);
             }
         }
 
         // Skip the clock sequence generation process and use random instead.
 
-        clockSeqAndNode |= (long) (Math.random() * 0x3FFF) << 48;
+        clockSeqAndNode |= (long)(Math.random() * 0x3FFF) << 48;
 
     }
 
@@ -238,7 +137,8 @@ public final class UUIDGen {
                 if (lastTime.compareAndSet(current, timeMillis)) {
                     break;
                 }
-            } else {
+            }
+            else {
                 if (lastTime.compareAndSet(current, current + 1)) {
                     timeMillis = current + 1;
                     break;
@@ -272,34 +172,6 @@ public final class UUIDGen {
     }
 
     /**
-     * Returns the first line of the shell command.
-     * 
-     * @param commands the commands to run
-     * @return the first line of the command
-     * @throws IOException
-     */
-    static String getFirstLineOfCommand(String... commands) throws IOException {
-
-        Process p = null;
-        BufferedReader reader = null;
-
-        try {
-            p = Runtime.getRuntime().exec(commands);
-            reader = new BufferedReader(new InputStreamReader(
-                    p.getInputStream()), 128);
-
-            return reader.readLine();
-        }
-        finally {
-            if (p != null) {
-                close(reader, p.getErrorStream(), p.getOutputStream());
-                p.destroy();
-            }
-        }
-
-    }
-
-    /**
      * Scans MAC addresses for good ones.
      */
     static class HardwareAddressLookup {
@@ -317,7 +189,7 @@ public final class UUIDGen {
                         NetworkInterface iface = ifs.nextElement();
                         byte[] hardware = iface.getHardwareAddress();
                         if (hardware != null && hardware.length == 6
-                                && hardware[1] != (byte) 0xff) {
+                                && hardware[1] != (byte)0xff) {
                             out = Hex.append(new StringBuilder(36), hardware).toString();
                             break;
                         }

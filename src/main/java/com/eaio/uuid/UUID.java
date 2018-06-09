@@ -1,35 +1,27 @@
-/*
- * UUID.java
+/**
+ * Copyright 2016 Neeve Research, LLC
  *
- * Created 07.02.2003
+ * This product includes software developed at Neeve Research, LLC
+ * (http://www.neeveresearch.com/) as well as software licenced to
+ * Neeve Research, LLC under one or more contributor license agreements.
+ * See the NOTICE file distributed with this work for additional information
+ * regarding copyright ownership.
  *
- * eaio: UUID - an implementation of the UUID specification
- * Copyright (c) 2003-2013 Johann Burkard (jb@eaio.com) http://eaio.com.
+ * Neeve Research licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following conditions:
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
- * NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
- * USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.eaio.uuid;
 
 import java.io.*;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.eaio.util.lang.Hex;
 
@@ -51,8 +43,7 @@ import com.eaio.util.lang.Hex;
  * @author <a href="mailto:jb@eaio.de">Johann Burkard</a>
  * @version $Id: UUID.java 4688 2012-03-09 14:49:49Z johann $
  */
-public class UUID implements Comparable<UUID>, Externalizable, Cloneable,
-        IDLEntity {
+public class UUID implements Comparable<UUID>, Cloneable {
 
     /**
      * Hasn't ever changed between versions.
@@ -61,15 +52,11 @@ public class UUID implements Comparable<UUID>, Externalizable, Cloneable,
 
     /**
      * The time field of the UUID.
-     *
-     * @serial
      */
     public long time;
 
     /**
      * The clock sequence and node field of the UUID.
-     *
-     * @serial
      */
     public long clockSeqAndNode;
 
@@ -113,7 +100,7 @@ public class UUID implements Comparable<UUID>, Externalizable, Cloneable,
      */
     public UUID(CharSequence s) {
         this(Hex.parseLong(s.subSequence(0, 18)), Hex.parseLong(s.subSequence(
-                19, 36)));
+                                                                              19, 36)));
     }
 
     /**
@@ -125,7 +112,6 @@ public class UUID implements Comparable<UUID>, Externalizable, Cloneable,
      * @param t the other UUID, may not be <code>null</code>
      * @return a value &lt; 0, 0 or a value &gt; 0
      * @see java.lang.Comparable#compareTo(java.lang.Object)
-     * @throws ClassCastException
      */
     public int compareTo(UUID t) {
         if (this == t) {
@@ -144,22 +130,6 @@ public class UUID implements Comparable<UUID>, Externalizable, Cloneable,
             return -1;
         }
         return 0;
-    }
-
-    /**
-     * Tweaked Serialization routine.
-     */
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeLong(time);
-        out.writeLong(clockSeqAndNode);
-    }
-
-    /**
-     * Tweaked Serialization routine.
-     */
-    public void readExternal(ObjectInput in) throws IOException {
-        time = in.readLong();
-        clockSeqAndNode = in.readLong();
     }
 
     /**
@@ -190,7 +160,7 @@ public class UUID implements Comparable<UUID>, Externalizable, Cloneable,
         else {
             out.ensureCapacity(out.length() + 36);
         }
-        return (StringBuffer) toAppendable(out);
+        return (StringBuffer)toAppendable(out);
     }
 
     /**
@@ -210,10 +180,10 @@ public class UUID implements Comparable<UUID>, Externalizable, Cloneable,
             out = new StringBuilder(36);
         }
         try {
-            Hex.append(out, (int) (time >> 32)).append('-');
-            Hex.append(out, (short) (time >> 16)).append('-');
-            Hex.append(out, (short) time).append('-');
-            Hex.append(out, (short) (clockSeqAndNode >> 48)).append('-');
+            Hex.append(out, (int)(time >> 32)).append('-');
+            Hex.append(out, (short)(time >> 16)).append('-');
+            Hex.append(out, (short)time).append('-');
+            Hex.append(out, (short)(clockSeqAndNode >> 48)).append('-');
             Hex.append(out, clockSeqAndNode, 12);
         }
         catch (IOException ex) {
@@ -232,7 +202,7 @@ public class UUID implements Comparable<UUID>, Externalizable, Cloneable,
      */
     @Override
     public int hashCode() {
-        return (int) ((time >> 32) ^ time ^ (clockSeqAndNode >> 32) ^ clockSeqAndNode);
+        return (int)((time >> 32) ^ time ^ (clockSeqAndNode >> 32) ^ clockSeqAndNode);
     }
 
     /**
@@ -282,7 +252,7 @@ public class UUID implements Comparable<UUID>, Externalizable, Cloneable,
         if (!(obj instanceof UUID)) {
             return false;
         }
-        return compareTo((UUID) obj) == 0;
+        return compareTo((UUID)obj) == 0;
     }
 
     /**

@@ -1,29 +1,23 @@
-/*
- * MACAddressParserTest.java
- * 
- * Created 30.01.2006.
- * 
- * eaio: UUID - an implementation of the UUID specification
- * Copyright (c) 2003-2008 Johann Burkard (jb@eaio.com) http://eaio.com.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
- * NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
- * USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
+/**
+ * Copyright 2016 Neeve Research, LLC
+ *
+ * This product includes software developed at Neeve Research, LLC
+ * (http://www.neeveresearch.com/) as well as software licenced to
+ * Neeve Research, LLC under one or more contributor license agreements.
+ * See the NOTICE file distributed with this work for additional information
+ * regarding copyright ownership.
+ *
+ * Neeve Research licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at:
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.eaio.uuid;
 
@@ -47,11 +41,11 @@ public class MACAddressParserTest extends TestCase {
         assertNull(MACAddressParser.parse("kalifornia blorb blob"));
         assertNull(MACAddressParser.parse("bla: keks: blorb: blubbix:a"));
         assertEquals(
-                "0:3:ba:1b:c4:74",
-                MACAddressParser.parse("blablorb (10.20.30.40) at 0:3:ba:1b:c4:74 permanent published"));
+                     "0:3:ba:1b:c4:74",
+                     MACAddressParser.parse("blablorb (10.20.30.40) at 0:3:ba:1b:c4:74 permanent published"));
         assertEquals(
-                "00:12:F0:21:F1:57",
-                MACAddressParser.parse("        Physikalische Adresse . . . . . . : 00-12-F0-21-F1-57"));
+                     "00:12:F0:21:F1:57",
+                     MACAddressParser.parse("        Physikalische Adresse . . . . . . : 00-12-F0-21-F1-57"));
     }
 
     public void testParse2() {
@@ -60,10 +54,10 @@ public class MACAddressParserTest extends TestCase {
         addr = "blablorb (10.20.30.40) at 0:3:ba:1b:c4:74 permanent published";
         for (int i = addr.length(); i > 40; --i) {
             assertEquals("0:3:ba:1b:c4:74",
-                    MACAddressParser.parse(addr.substring(0, i)));
+                         MACAddressParser.parse(addr.substring(0, i)));
         }
         assertEquals("0:3:ba:1b:c4:7", MACAddressParser.parse(addr.substring(0,
-                40)));
+                                                                             40)));
         for (int i = 39; i != 0; --i) {
             assertNull(MACAddressParser.parse(addr.substring(0, i)));
         }
@@ -73,8 +67,8 @@ public class MACAddressParserTest extends TestCase {
         assertNull(MACAddressParser.parse("Hardware Station        Crd  Hdw   Net-Interface    NM   MAC       HP-DLPI DLPI"));
         assertNull(MACAddressParser.parse("Path     Address        In#  State NamePPA          ID   Type      Support Mjr#"));
         assertEquals(
-                "001560045000",
-                MACAddressParser.parse("0/1/2/0  0x001560045000 0    UP    lan0 snap0       1    ETHER       Yes   119"));
+                     "001560045000",
+                     MACAddressParser.parse("0/1/2/0  0x001560045000 0    UP    lan0 snap0       1    ETHER       Yes   119"));
     }
 
     /**
@@ -86,8 +80,8 @@ public class MACAddressParserTest extends TestCase {
     public void testBroadcom() {
         assertNull(MACAddressParser.parse("Description . . . . . . . . . . . : Broadcom 440x 10/100 Integrated Controller"));
         assertEquals(
-                "00:1C:23:AD:D1:5A",
-                MACAddressParser.parse("Physical Address. . . . . . . . . : 00-1C-23-AD-D1-5A"));
+                     "00:1C:23:AD:D1:5A",
+                     MACAddressParser.parse("Physical Address. . . . . . . . . : 00-1C-23-AD-D1-5A"));
     }
 
     public void testMacOSXLeopard() throws IOException {
@@ -103,15 +97,15 @@ public class MACAddressParserTest extends TestCase {
         }
         finally {
             if (is != null) {
-            try {
-                is.close();
-            }
-            catch (IOException ex) {}
+                try {
+                    is.close();
+                }
+                catch (IOException ex) {}
             }
         }
         byte[] buf = bos.toByteArray();
 
-        String macosxLeopard = new String(buf, 0);
+        String macosxLeopard = new String(buf, "us-ascii");
         String[] lines = macosxLeopard.split("\n");
         String mac = null;
         for (String line : lines) {

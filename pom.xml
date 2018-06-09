@@ -3,68 +3,24 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>5</version>
+    <groupId>com.neeve</groupId>
+    <artifactId>nvx-os-parent</artifactId>
+    <version>1.0</version>
   </parent>
 
-  <groupId>com.github.stephenc.eaio-uuid</groupId>
+  <groupId>com.eaio.uuid</groupId>
   <artifactId>uuid</artifactId>
-  <version>3.4.1-SNAPSHOT</version>
+  <version>3.4.1-NVX</version>
 
   <name>UUID</name>
-  <description>An implementation of the UUIDs and GUIDs specification in Java. UUIDs are 128 bit long identifiers that are guaranteed to be unique.</description>
-  <url>http://stephenc.github.com/eaio-uuid</url>
-  <inceptionYear>2003</inceptionYear>
-  <licenses>
-    <license>
-      <name>MIT License</name>
-      <url>http://www.opensource.org/licenses/mit-license.php</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <developers>
-    <developer>
-      <id>stephenc</id>
-      <name>Stephen Connolly</name>
-      <roles>
-        <role>packager</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>johann</id>
-      <name>Johann Burkard</name>
-      <email>johann@johannburkard.de</email>
-      <url>http://johannburkard.de</url>
-      <organization>Johann Burkard</organization>
-      <organizationUrl>http://johannburkard.de</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-  </developers>
-
+  <description>
+  An implementation of the UUIDs and GUIDs specification in Java. UUIDs are 128 bit long identifiers that are guaranteed to be unique. This is based on the project by stephenc, 
+  but is updated to remove the CORBA dependencies that are no longer present in later versions of the JDK. 
+  </description>
+  
   <prerequisites>
     <maven>2.2.1</maven>
   </prerequisites>
-
-  <scm>
-    <connection>scm:git:git://github.com/stephenc/eaio-uuid.git</connection>
-    <developerConnection>scm:git:git@github.com:stephenc/eaio-uuid.git</developerConnection>
-    <url>http://github.com/stephenc/eaio-uuid/tree/master/</url>
-    <tag>HEAD</tag>
-  </scm>
-  <issueManagement>
-    <system>github</system>
-    <url>http://github.com/stephenc/eaio-uuid/issues</url>
-  </issueManagement>
-  <distributionManagement>
-    <site>
-      <id>github.com</id>
-      <url>gitsite:git@github.com/stephenc/eaio-uuid.git</url>
-    </site>
-  </distributionManagement>
 
   <properties>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -73,11 +29,6 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>com.github.stephenc.eaio-grabbag</groupId>
-      <artifactId>grabbag</artifactId>
-      <version>1.8.1</version>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -135,8 +86,8 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
           <compilerArgument>-g</compilerArgument>
         </configuration>
       </plugin>
