@@ -9,9 +9,9 @@
  *
  * Neeve Research licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at:
+ * with the License. You may obtain a copy of the License at:
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,7 +43,7 @@ import com.eaio.util.lang.Hex;
  * @author <a href="mailto:jb@eaio.de">Johann Burkard</a>
  * @version $Id: UUID.java 4688 2012-03-09 14:49:49Z johann $
  */
-public class UUID implements Comparable<UUID>, Cloneable {
+public class UUID implements Comparable<UUID>, Externalizable, Cloneable {
 
     /**
      * Hasn't ever changed between versions.
@@ -130,6 +130,22 @@ public class UUID implements Comparable<UUID>, Cloneable {
             return -1;
         }
         return 0;
+    }
+
+    /**
+     * Tweaked Serialization routine.
+     */
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeLong(time);
+        out.writeLong(clockSeqAndNode);
+    }
+
+    /**
+     * Tweaked Serialization routine.
+     */
+    public void readExternal(ObjectInput in) throws IOException {
+        time = in.readLong();
+        clockSeqAndNode = in.readLong();
     }
 
     /**
